@@ -47,9 +47,7 @@ if ieNotDefined('wBar'), showBar = 0; else, showBar = 1; end
 % [nRows x nCols x nColors] that matches the optical image.
 % The spatial integration to account for the pixel size happens next.
 if showBar, waitbar(0.4,wBar,'Sensor image: Signal Current Density'); end
-
-% if we have multiple OIs, we assume that we can use the first for this
-signalCurrentDensityImage = SignalCurrentDensity(oi(1),sensor);	    % [A/m^2]
+signalCurrentDensityImage = SignalCurrentDensity(oi,sensor);	    % [A/m^2]
 
 if isempty(signalCurrentDensityImage)
     % This should never happen.

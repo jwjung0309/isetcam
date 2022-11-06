@@ -218,7 +218,7 @@ switch oType
                 
                 
             case {'rows','row','nrows','nrow'}
-                if checkfields(oi(1),'data','photons'), val = size(oi(1).data.photons,1);
+                if checkfields(oi,'data','photons'), val = size(oi.data.photons,1);
                 else
                     % disp('Using current scene rows')
                     scene = vcGetObject('scene');
@@ -231,7 +231,7 @@ switch oType
                 end
                 
             case {'cols','col','ncols','ncol'}
-                if checkfields(oi(1),'data','photons'), val = size(oi(1).data.photons,2);
+                if checkfields(oi,'data','photons'), val = size(oi.data.photons,2);
                 else
                     % disp('Using current scene cols')
                     scene = vcGetObject('scene');
