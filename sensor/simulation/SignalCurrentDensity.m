@@ -106,13 +106,18 @@ if nRows*nCols < critSize
     % Changed to reduce memory size.  Not sure about implications for
     % precision.  But no v_ISET failures, so ...
     % irradiance = oiGet(OI,'photons');       % quanta/m2/nm/sec, made
-    % Use irradiance from the initial frame, if there is more than one
-    irradiance = OI.data.photons(:,:,:,1);       % quanta/m2/nm/sec, left single
+
+    % Support for multiple frame OIs means that we need to calc the
+    % irradiance based on QE for each frame:
+    irradiance = OI.data.photons;       % quanta/m2/nm/sec, left single
     
     irradiance = RGB2XWFormat(irradiance);
     
-    scdImage =  irradiance * sQE;           % SUM_bin (quanta/m2/nm/sec * (nm/bin)) = (quanta/m2/sec)
-    scdImage = XW2RGBFormat(scdImage,nRows,nCols);
+    for ii = 1:size(irradiance, 3)
+
+        % SUM_bin (quanta/m2/nm/sec * (nm/bin)) = (quanta/m2/sec)
+        scdImage(:,:,:,ii) = XW2RGBFormat(irradiance(:,:,ii) * sQE,nRows,nCols);
+    end
     % At this point, if we multiply by the photodetector area and the
     % integration time, that gives us the number of electrons at a pixel.
 else
