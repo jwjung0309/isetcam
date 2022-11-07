@@ -1,8 +1,24 @@
 function oiShifted = oiCameraMotion(oi, options)
-% Think about using depthmap to drive disparity
-% to simulate camera motion
+% Use a depthmap to drive disparity
+% for simulating camera motion
 %
 % D. Cardinal, Stanford University, 2022
+
+% Arguments:
+%  oi -- An oi (Optical Image) struct with a depthmap
+% Options:
+%  amount -- A cell array of X,Y camera motion pairs (m) for each frame
+%            after the first one (which is assumed to be 0,0)
+%  focalLength -- distance from lens to sensor in meters
+
+% Note: the motion array needs to match the number of frames - 1
+%       for now. Can probably automate
+
+% Note: For now motion is per frame, as we don't have the exposure time
+%       when we create the burst OI (since we re-use it)
+
+% TODO: Currently we "fill" with black. That should be flexible,
+%       and ideally we should support some fancy infill routines
 
 %{
 Test code:
@@ -22,6 +38,7 @@ sensor_burst = sensorCompute(sensor_burst,oiBurst);
 arguments
     oi = oiCreate();
     options.amount = {[0 .1], [0 .2]};
+    options.focalLength = .004; % meters -- smartphone esque
 end
 
 % We have:
@@ -30,7 +47,8 @@ depth =  oi.depthMap;
 
 % We'll fix these for now, but should be computed
 cameraShift = options.amount; % horizontal & vertical in meters
-focalLength = .004; % meters -- smartphone esque
+focalLength = options.focalLength; % meters 
+
 %{
 In principle, the idea is to shift each pixel in the image by an
 amount inversely-proportional to its depth.
