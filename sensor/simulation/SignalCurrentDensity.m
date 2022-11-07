@@ -113,8 +113,13 @@ if nRows*nCols < critSize
     
     irradiance = RGB2XWFormat(irradiance);
     
-    for ii = 1:size(irradiance, 3)
+    % Pre-oiBurst version:
+    %   scdImage =  irradiance * sQE;           % SUM_bin (quanta/m2/nm/sec * (nm/bin)) = (quanta/m2/sec)
+    %   scdImage = XW2RGBFormat(scdImage,nRows,nCols);
 
+    % if the OI is a burst, then we may have more than one irradiance
+    for ii = 1:size(irradiance, 3)
+        % Take our irradiance * per-wavelength per-channel QE (sQE)
         % SUM_bin (quanta/m2/nm/sec * (nm/bin)) = (quanta/m2/sec)
         scdImage(:,:,:,ii) = XW2RGBFormat(irradiance(:,:,ii) * sQE,nRows,nCols);
     end

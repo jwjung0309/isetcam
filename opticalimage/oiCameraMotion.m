@@ -4,6 +4,21 @@ function oiShifted = oiCameraMotion(oi, options)
 %
 % D. Cardinal, Stanford University, 2022
 
+%{
+Test code:
+
+sensor = sensorCreate('imx363');
+load('oi_001.mat', 'oi'); % get an OI
+aeMethod = 'specular';
+aeLevels = .8;
+aeTime = autoExposure(oi,sensor, aeLevels, aeMethod);
+burstFrames = 3;
+burstTimes = repelem(aeTime/burstFrames, burstFrames);
+
+sensor_burst = sensorSet(sensor,'exp time',burstTimes);
+sensor_burst = sensorSet(sensor_burst, 'exposure method', 'burst');
+sensor_burst = sensorCompute(sensor_burst,oiBurst);
+%}
 arguments
     oi = oiCreate();
     options.amount = {[0 .1], [0 .2]};

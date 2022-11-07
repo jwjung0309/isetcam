@@ -169,13 +169,27 @@ for ss=1:length(sensorArray)   % Number of sensors
         % There is only one exposure time.  Conventional calculation
         voltImage = cur2volt*unitSigCurrent;
     else
-        % Multiple exposure times, so we copy the unit term into multiple
-        % dimensions
+        % Multiple exposure times, We copy the unit term into multiple
+        % dimensions unless we already have pre-calced signals for each
+
+        %{ 
+        Old code:
         voltImage = repmat(unitSigCurrent,[1 1 length(cur2volt)]);
         % Multiply each dimension by its own scale factor
         for ii=1:length(cur2volt)
             voltImage (:,:,ii) = cur2volt(ii)*voltImage (:,:,ii);
         end
+        %}
+        if size(unitSigCurrent,3) < length(cur2volt)
+            voltImage = repmat(unitSigCurrent,[1 1 length(cur2volt)]);
+        else
+            voltImage = unitSigCurrent;
+        end
+        % Multiply each dimension by its own scale factor
+        for ii=1:length(cur2volt)
+            voltImage (:,:,ii) = cur2volt(ii)*voltImage (:,:,ii);
+        end
+
     end
     
     %% Calculate etendue from pixel vignetting

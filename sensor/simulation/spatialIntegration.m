@@ -32,7 +32,7 @@ function signalCurrentImage = spatialIntegration(scdi,oi,sensor,gridSpacing)
 %    every point in that grid (e.g., a 5x5 grid).  The pixel is computed by
 %    summing across those grid points (weighted appropriately).
 %
-%    The high-reoslution mode used to be the default mode (before 2004).
+%    The high-resolution mode used to be the default mode (before 2004).
 %    But over time we came to believe that it is better to understand the
 %    effects of photodetector placement and pixel optics using the
 %    microlenswindow module. For certain applications, though, such as
@@ -72,8 +72,10 @@ nGridSamples = 1/gridSpacing;
 %
 %  So the default is gridSpacing of 1.
 %
-flatSCDI = regridOI2ISA(scdi,oi,sensor,gridSpacing);
-
+% add support for multiple OI inputs
+for ii = 1:size(scdi,4)
+    flatSCDI(:,:,ii) = regridOI2ISA(scdi(:,:,:,ii),oi,sensor,gridSpacing);
+end
 % Calculate the fractional area of the photodetector within each grid
 % region of each pixel.  If we are super-sampling, we use sensorPDArray.
 % Otherwise, we only need the fill factor.
