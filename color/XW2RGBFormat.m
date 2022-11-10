@@ -35,9 +35,10 @@ if ~exist('col','var')||isempty(col), error('No col size.'); end
 
 x = size(imXW,1);
 w = size(imXW,2);
+f = size(imXW, 3); % For when we have data from a burst OI
 
 if row*col ~= x, error('XW2RGBFormat:  Bad row, col values'); end
 
-imRGB = reshape(imXW,row,col,w);
+imRGB = reshape(imXW,row,col,w, f);
 
 return;

@@ -123,6 +123,7 @@ for ss=1:length(sensorArray)   % Number of sensors
         % We could decide that if autoexposure is on and there is a vector of
         % values we replace them with a single value.
         if showBar, wBar = waitbar(0,wBar,'Sensor image: Auto Exposure'); end
+        
         sensor.integrationTime  = autoExposure(oi,sensor);
         
     elseif isvector(integrationTime)

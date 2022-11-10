@@ -218,6 +218,8 @@ switch oType
                 
                 
             case {'rows','row','nrows','nrow'}
+                %what if we don't have photons OR a scene
+                %also check input
                 if checkfields(oi,'data','photons'), val = size(oi.data.photons,1);
                 else
                     % disp('Using current scene rows')
@@ -232,6 +234,7 @@ switch oType
                 
             case {'cols','col','ncols','ncol'}
                 if checkfields(oi,'data','photons'), val = size(oi.data.photons,2);
+                elseif checkfields(oi,'data','input'), val = size(oi.data.input,2);
                 else
                     % disp('Using current scene cols')
                     scene = vcGetObject('scene');
@@ -767,7 +770,7 @@ switch oType
                 %
                 % See if there is a display window
                 oiW = ieSessionGet('oi window');
-                if isempty(oiW), val = 1;  % Default if no window
+                if isempty(oiW) || ~checkfields('oiW','Value') , val = 1;  % Default if no window
                 else, val = str2double(oiW.editGamma.Value);
                 end
                 

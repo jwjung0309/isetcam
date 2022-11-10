@@ -68,7 +68,7 @@ catch ME
     
     % We are probably here because of a memory problem.  So, let's try
     % the calculation again, but one waveband at a time
-    [r,c,w] = size(irradianceP);
+    [r,c,w,~] = size(irradianceP);
     illuminance = zeros(r,c);
     clear irradianceP;
     

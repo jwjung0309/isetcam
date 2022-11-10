@@ -134,14 +134,14 @@ switch lower(objType)
             end
         end
         
-        [img,r,c] = RGB2XWFormat(data);
+        [img,r,c, w ] = RGB2XWFormat(data);
         
         % Should we keep the data in bounds?
         roiLocs(:,1) = ieClip(roiLocs(:,1),1,r);
         roiLocs(:,2) = ieClip(roiLocs(:,2),1,c);
         
         imgLocs = sub2ind([r,c],roiLocs(:,1),roiLocs(:,2));
-        roiData = img(imgLocs,:);
+        roiData = img(imgLocs,:,:);
         
     case {'isa','sensor'}
         if ieNotDefined('dataType'), dataType = 'volts'; end

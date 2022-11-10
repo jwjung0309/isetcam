@@ -43,6 +43,7 @@ end
 
 % We have:
 data  =  oi.data.photons;
+illuminance = oi.data.illuminance;
 depth =  oi.depthMap;
 
 % We'll fix these for now, but should be computed
@@ -80,9 +81,11 @@ for aShift = 1:numel(cameraShift)
 
     % use our initial data as the baseline for our shift image
     shiftData = data;
+    shiftIlluminance = illuminance;
 
     % see what happens if we don't start with fill
     shiftData(:,:,:) = 0;
+    shiftIlluminance(:,:,:) = 0;
 
 
     for ii = 1:size(data,1) % rows
@@ -94,12 +97,14 @@ for aShift = 1:numel(cameraShift)
             if newLocation(1) <= size(data,1) && newLocation(2) <= size(data,2) ...
                     && newLocation(1) >= 1 && newLocation(2) >= 1
                 shiftData(newLocation(1),newLocation(2),:) = data(ii,iii,:);
+                shiftIlluminance(newLocation(1),newLocation(2),:) = illuminance(ii,iii,:);
             end
         end
     end
     % Update our return OI with our new data
     % Copying here for debugging, can remove to save memory
     oiShifted.data.photons(:,:,:,end+1) = shiftData;
+    oiShifted.data.illuminance(:,:,end+1) = shiftIlluminance;
 
 end
 
