@@ -97,7 +97,9 @@ for aShift = 1:numel(cameraShift)
             if newLocation(1) <= size(data,1) && newLocation(2) <= size(data,2) ...
                     && newLocation(1) >= 1 && newLocation(2) >= 1
                 shiftData(newLocation(1),newLocation(2),:) = data(ii,iii,:);
-                shiftIlluminance(newLocation(1),newLocation(2),:) = illuminance(ii,iii,:);
+                if ~isempty(illuminance)
+                    shiftIlluminance(newLocation(1),newLocation(2),:) = illuminance(ii,iii,:);
+                end
             end
         end
     end
