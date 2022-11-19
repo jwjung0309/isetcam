@@ -55,9 +55,13 @@ if ~exist('fname','var')||isempty(fname), fname = ''; end
 
 % Create a partialpath for this file name.  For this to work, we need to
 % keep all of the spectral data in a single directory, I am afraid.
-if isempty(fname)
-    fname = vcSelectDataFile('');
-    if isempty(fname), disp('User canceled'); return; end
+if ~isdeployed
+    if isempty(fname)
+        fname = vcSelectDataFile('');
+        if isempty(fname), disp('User canceled'); return; end
+    end
+else
+    if isempty(fname); return; end
 end
 
 % Load in spectral data
