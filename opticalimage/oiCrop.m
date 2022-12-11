@@ -52,6 +52,9 @@ oiWindow(oi);
 %%
 if ieNotDefined('oi'), error('You must define an optical image.'); end
 
+% stash rect in case it is a text command
+stashRect = rect;
+
 if ieNotDefined('rect')
     [roiLocs,rect] = ieROISelect(oi);
 elseif isequal(rect, 'roundeven')
@@ -74,8 +77,9 @@ elseif isvector(rect)
     roiLocs = ieRect2Locs(rect);
 end
 
-%% Preserve the original sample space
+%% Preserve the original sample space and angular width
 sampleSpace = oiGet(oi, 'distance per sample');
+wAngular = oiGet(oi,'wangular');
 %% Adjust the irradiance data
 
 % The number of selected columns and rows
@@ -106,8 +110,17 @@ sz = oiGet(oi,'size');
 wAngularNew = atand(newSz(2) * sampleSpace/2/focalLength) /...
     atand(sz(2) * sampleSpace/2/focalLength) * wAngular;
 %}
-wAngularNew = atand(newSz(2) * sampleSpace(2) / 2 / focalLength) * 2;
 
+% if we have a pinhole we don't have a focal length
+if ~isequaln(focalLength, NaN())
+    wAngularNew = atand(newSz(2) * sampleSpace(2) / 2 / focalLength) * 2;
+elseif isequal(stashRect,'border')
+    % need to manually set to wAngular, or we get NaN
+    % just handle simple border case for now
+    wAngularNew = .8 * wAngular;
+else
+    wAngularNew = NaN(); % same as before
+end
 
 oi = oiSet(oi,'wangular',wAngularNew);
 
