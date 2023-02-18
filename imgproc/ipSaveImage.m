@@ -8,6 +8,7 @@ function fName = ipSaveImage(ip,fName,showImageFlag,trueSizeFlag, varargin)
 %   ip:     image processor struct
 %   fName:  png output file
 %
+%   'cropborder' for whether to remove black areas
 % Description:
 %
 % See also
@@ -37,6 +38,8 @@ addParameter(p, 'cropborder', false);
 varargin = ieParamFormat(varargin);
 p.parse(varargin{:});
 
+cropBorder = p.Results.cropborder;
+
 %%
 if ~exist('ip','var') || isempty(ip), ip = ieGetObject('ip'); end
 gam     = ipGet(ip,'display gamma');
@@ -58,7 +61,7 @@ if isempty(e), e = '.png'; end
 fName = fullfile(p,[n,e]);
 
 % if we've been asked to crop out a black border
-if p.Results.cropborder
+if cropBorder
     img = imageCropBorder(img);
 end
 
