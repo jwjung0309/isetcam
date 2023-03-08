@@ -38,7 +38,8 @@ addParameter(p, 'cropborder', false);
 varargin = ieParamFormat(varargin);
 p.parse(varargin{:});
 
-cropBorder = p.Results.cropborder;
+
+cropFlag = p.Results.cropborder;
 
 %%
 if ~exist('ip','var') || isempty(ip), ip = ieGetObject('ip'); end
@@ -61,7 +62,7 @@ if isempty(e), e = '.png'; end
 fName = fullfile(p,[n,e]);
 
 % if we've been asked to crop out a black border
-if cropBorder
+if cropFlag
     img = imageCropBorder(img);
 end
 
