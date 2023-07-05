@@ -58,7 +58,7 @@ varargin = ieParamFormat(varargin);
 p = inputParser;
 p.addParameter('lca',true,@islogical);      % Incorporate longitudinal chromatic aberration
 p.addParameter('showbar',false,@islogical); 
-p.addParameter('force',false,@islogical);    % Do NOT force computation by default
+p.addParameter('force',false,@islogical);    % force computation of pupil function
 
 varargin = wvfKeySynonyms(varargin);
 
@@ -68,7 +68,14 @@ p.parse(varargin{:});
 
 %% BW:  Maybe time to get rid of this 'if'
 
-% Only calculate if we need to -- PSF might already be computed and stored
+% Only calculate if we need to -- PSF might already be computed and stored.
+% The 'force' parameter recomputes the pupil function (see below).  It can
+% be false (do not force) but we compute the PSF and do NOT recompute the
+% pupilFunction.  Probably we should rename the variable or separate the
+% two (force psf and force pupil function).
+%
+% Maybe if we call this function, we definitely compute the PSF, but we use
+% the parameter force to specify if we recompute the pupilFunction.
 if (~isfield(wvf, 'psf') || ~isfield(wvf, 'PSF_STALE') || ...
         wvf.PSF_STALE || ~isfield(wvf, 'pupilfunc') || ...
         ~isfield(wvf, 'PUPILFUNCTION_STALE') || wvf.PUPILFUNCTION_STALE || ...
@@ -83,13 +90,16 @@ if (~isfield(wvf, 'psf') || ~isfield(wvf, 'PSF_STALE') || ...
 
     % Compute the pupil function, if needed.
     % 
-    % By default, wvf uses the chromatic aberration of the human eye.
-    % But we can turn that off here setting 'lca' parameter to false.
-    % The wvfComputePupilFunction only as the 'no lca' parameter,
-    % which is the logical complement.
+    % This parameter force my spare a new computation of the pupil
+    % function.  We set the 'force' parameter to true, to force recomputing
+    % the pupil function.  But we may already computed it, say in the flare
+    % calculation.  In that case, we may not want to recompute it with the
+    % defaults (i.e., circular aperture).
     %
-    % Also, this function may not force a new computation of the pupil
-    % function.  We can set the 'force' parameter to true, to force.
+    % Also, by default, wvf uses the chromatic aberration of the human eye.
+    % But we can turn that off here setting 'lca' parameter to false. The
+    % wvfComputePupilFunction only has the 'no lca' parameter, which is the
+    % logical complement.
     wvf = wvfComputePupilFunction(wvf, ...
         'nolca',~p.Results.lca,...
         'force',p.Results.force);
